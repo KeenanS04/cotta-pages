@@ -1,22 +1,61 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Senior Project</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <h1 class="site-title">Senior Project</h1>
+        <div class="dropdown">
+          <button class="dropdown-btn">Menu</button>
+          <div class="dropdown-content">
+		  	<a href="#aboutus">About Us</a>
+            <a href="#introduction">Introduction</a>
+            <a href="#background">Background</a>
+            <a href="#methodology">Methodology</a>
+            <a href="#experiments">Experiments</a>
+            <a href="#results">Results</a>
+            <a href="#conclusion">Conclusion</a>
+            <a href="#appendix">Appendix</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <slot />
+    </main>
+    <footer>
+      <p>&copy; {new Date().getFullYear()} Your Name. All rights reserved.</p>
+    </footer>
+    <script>
+      <script>
+      // Wait until DOM is fully loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        // Toggle the dropdown on button click
+        dropdownBtn.addEventListener('click', (e) => {
+          e.stopPropagation();         // Prevent click from bubbling up
+          dropdownContent.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside of it
+        document.addEventListener('click', () => {
+          dropdownContent.classList.remove('show');
+        });
+
+        // Prevent closing when clicking inside the dropdown content
+        dropdownContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      });
+    </script>
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+

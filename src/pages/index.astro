@@ -1,175 +1,113 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import styles from '../components/styles.css';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { onMount } from 'solid-js';
 ---
 
-<Layout>
-	<h1 id="aboutus">About Us</h1>
-	<h1 id="introduction">Introduction</h1>
-	<h1 id="background">Background</h1>
-	<h1 id="methodology">Methodology</h1>
-	<h1 id="experiments">Experiments</h1>
-	<h1 id="results">Results</h1>
-	<h1 id="conclusion">Conclusion, Limitations and Future Directions</h1>
-	<h1 id="appendix">Appendix</h1>
-</Layout>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoTTA Report</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: 'Arial', sans-serif; 
+            background-color: #121212;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #ff8c00, #ff2d55);
+            padding: 20px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        section { 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column;
+            text-align: center;
+            padding: 60px;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            font-size: 26px;
+        }
+        .visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
+        .title {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ff8c00, #ff2d55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .graph-placeholder {
+            width: 60%;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        #motivation { background-color: #1e1e1e; }
+        #background { background-color: #292929; }
+        #methods { background-color: #343434; }
+        #results { background-color: #3f3f3f; }
+        #contributions { background-color: #494949; }
+        #references { background-color: #555555; }
+    </style>
+</head>
+<body>
+    <header>CoTTA Report - Interactive Analysis</header>
+    
+    <section id="motivation" class="hidden">
+        <div class="title">Motivation</div>
+        <p>Placeholder text for motivation section.</p>
+    </section>
+    <section id="background" class="hidden">
+        <div class="title">Background</div>
+        <p>Placeholder text for background section.</p>
+        <div class="graph-placeholder">Graph Placeholder</div>
+    </section>
+    <section id="methods" class="hidden">
+        <div class="title">Methods</div>
+        <p>Placeholder text for methods section.</p>
+    </section>
+    <section id="results" class="hidden">
+        <div class="title">Results</div>
+        <p>Placeholder text for results section.</p>
+        <div class="graph-placeholder">Results Graph Placeholder</div>
+    </section>
+    <section id="contributions" class="hidden">
+        <div class="title">Contributions</div>
+        <p>Placeholder text for contributions section.</p>
+    </section>
+    <section id="references" class="hidden">
+        <div class="title">References</div>
+        <p>Placeholder text for references section.</p>
+    </section>
 
-<style>
-:root {
-  --primary-color: #2c3e50;
-  --secondary-color: #8e44ad;
-  --accent-color: #3498db;
-  --bg-gradient-start: #f3e7e9;
-  --bg-gradient-end: #e3eeff;
-}
-
-/* Global styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-  color: var(--primary-color);
-  min-height: 100vh;
-  line-height: 1.6;
-}
-
-/* Header container: title on left, nav dropdown on right */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.site-title {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-/* Dropdown styles */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-btn {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-btn:hover {
-  background-color: var(--accent-color);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #fff;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.dropdown-content a {
-  color: #333;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover for larger screens */
-@media (min-width: 600px) {
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-}
-
-/* Show dropdown when .show class is added (for mobile click) */
-.dropdown-content.show {
-  display: block;
-}
-
-/* Container for main content */
-.container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-}
-
-/* Section header styling */
-h1 {
-  font-size: 2.2rem;
-  margin: 2rem 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent-color);
-  text-align: center;
-}
-
-/* Paragraph text styling */
-p {
-  margin: 1rem 0;
-  font-size: 1rem;
-}
-
-/* Link styling */
-a {
-  color: var(--secondary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--accent-color);
-}
-
-/* Footer styling */
-footer {
-  background-color: #f8f8f8;
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #555;
-  border-top: 1px solid #ddd;
-  margin-top: 2rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-  .container {
-    padding: 1rem;
-  }
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .dropdown {
-    align-self: flex-end;
-    margin-top: 0.5rem;
-  }
-}
-
-
-</style>
+    <script>
+        document.addEventListener("scroll", () => {
+            document.querySelectorAll("section").forEach((section) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    section.classList.add("visible");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -22,22 +22,41 @@ import { onMount } from 'solid-js';
             background: linear-gradient(90deg, #ff8c00, #ff2d55);
             padding: 20px;
             text-align: center;
-            font-size: 36px;
+            font-size: 40px;
             font-weight: bold;
             z-index: 1000;
+        }
+        .menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1001;
+        }
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        .menu a:hover {
+            color: #ff8c00;
         }
         section { 
             min-height: 100vh; 
             display: flex; 
             align-items: center; 
-            justify-content: center; 
-            flex-direction: column;
-            text-align: center;
+            justify-content: space-around; 
+            text-align: left;
             padding: 60px;
             transition: opacity 1s ease-in-out, transform 1s ease-in-out;
             opacity: 0;
             transform: translateY(50px) scale(0.95);
-            font-size: 26px;
+            font-size: 24px;
         }
         .visible { 
             opacity: 1; 
@@ -51,8 +70,11 @@ import { onMount } from 'solid-js';
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .graph-placeholder {
-            width: 60%;
+        .content {
+            width: 50%;
+        }
+        .graph-placeholder, .image-placeholder {
+            width: 40%;
             height: 300px;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -60,6 +82,10 @@ import { onMount } from 'solid-js';
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .expanded {
+            transform: scale(1.5);
         }
         #motivation { background-color: #1e1e1e; }
         #background { background-color: #292929; }
@@ -72,31 +98,56 @@ import { onMount } from 'solid-js';
 <body>
     <header>CoTTA Report - Interactive Analysis</header>
     
+    <div class="menu">
+        <a href="#motivation">Motivation</a>
+        <a href="#background">Background</a>
+        <a href="#methods">Methods</a>
+        <a href="#results">Results</a>
+        <a href="#contributions">Contributions</a>
+        <a href="#references">References</a>
+    </div>
+    
     <section id="motivation" class="visible">
-        <div class="title">Motivation</div>
-        <p>Placeholder text for motivation section.</p>
+        <div class="content">
+            <div class="title">Motivation</div>
+            <p>Placeholder text for motivation section.</p>
+        </div>
+        <div class="image-placeholder">Image Placeholder</div>
     </section>
     <section id="background" class="hidden">
-        <div class="title">Background</div>
-        <p>Placeholder text for background section.</p>
+        <div class="content">
+            <div class="title">Background</div>
+            <p>Placeholder text for background section.</p>
+        </div>
         <div class="graph-placeholder">Graph Placeholder</div>
     </section>
     <section id="methods" class="hidden">
-        <div class="title">Methods</div>
-        <p>Placeholder text for methods section.</p>
+        <div class="graph-placeholder" id="methods-diagram">Methods Diagram Placeholder</div>
+        <div class="content">
+            <div class="title">Methods</div>
+            <p>Placeholder text for methods section.</p>
+        </div>
     </section>
     <section id="results" class="hidden">
-        <div class="title">Results</div>
-        <p>Placeholder text for results section.</p>
+        <div class="content">
+            <div class="title">Results</div>
+            <p>Placeholder text for results section.</p>
+        </div>
         <div class="graph-placeholder">Results Graph Placeholder</div>
     </section>
     <section id="contributions" class="hidden">
-        <div class="title">Contributions</div>
-        <p>Placeholder text for contributions section.</p>
+        <div class="image-placeholder">Team Photo Placeholder</div>
+        <div class="content">
+            <div class="title">Contributions</div>
+            <p>Placeholder text for contributions section.</p>
+        </div>
     </section>
     <section id="references" class="hidden">
-        <div class="title">References</div>
-        <p>Placeholder text for references section.</p>
+        <div class="content">
+            <div class="title">References</div>
+            <p>Placeholder text for references section.</p>
+        </div>
+        <div class="image-placeholder">Reference Logos Placeholder</div>
     </section>
 
     <script>
@@ -108,6 +159,16 @@ import { onMount } from 'solid-js';
                 }
             });
         });
+        
+        // document.addEventListener("scroll", () => {
+        //     const methodsDiagram = document.getElementById("methods-diagram");
+        //     const rect = methodsDiagram.getBoundingClientRect();
+        //     if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 3) {
+        //         methodsDiagram.classList.add("expanded");
+        //     } else {
+        //         methodsDiagram.classList.remove("expanded");
+        //     }
+        // });
     </script>
 </body>
 </html>

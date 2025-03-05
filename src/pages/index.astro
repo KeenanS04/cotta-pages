@@ -1,7 +1,4 @@
----
-import { onMount } from 'solid-js';
----
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,6 +43,7 @@ import { onMount } from 'solid-js';
         .menu a:hover {
             color: #ff8c00;
         }
+
         section { 
             min-height: 100vh; 
             display: flex; 
@@ -53,15 +51,17 @@ import { onMount } from 'solid-js';
             justify-content: space-around; 
             text-align: left;
             padding: 60px;
-            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
             font-size: 24px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
         }
-        .visible { 
-            opacity: 1; 
-            transform: translateY(0) scale(1);
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
         }
+
         .title {
             font-size: 50px;
             font-weight: bold;
@@ -70,9 +70,11 @@ import { onMount } from 'solid-js';
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .content {
             width: 50%;
         }
+
         .graph-placeholder, .image-placeholder {
             width: 40%;
             height: 300px;
@@ -84,9 +86,7 @@ import { onMount } from 'solid-js';
             font-size: 24px;
             transition: transform 0.5s ease-in-out;
         }
-        .expanded {
-            transform: scale(1.5);
-        }
+
         #motivation { background-color: #1e1e1e; }
         #background { background-color: #292929; }
         #methods { background-color: #343434; }
@@ -114,35 +114,35 @@ import { onMount } from 'solid-js';
         </div>
         <div class="image-placeholder">Image Placeholder</div>
     </section>
-    <section id="background" class="hidden">
+    <section id="background">
         <div class="content">
             <div class="title">Background</div>
             <p>Placeholder text for background section.</p>
         </div>
         <div class="graph-placeholder">Graph Placeholder</div>
     </section>
-    <section id="methods" class="hidden">
-        <div class="graph-placeholder" id="methods-diagram">Methods Diagram Placeholder</div>
+    <section id="methods">
+        <div class="graph-placeholder">Methods Diagram Placeholder</div>
         <div class="content">
             <div class="title">Methods</div>
             <p>Placeholder text for methods section.</p>
         </div>
     </section>
-    <section id="results" class="hidden">
+    <section id="results">
         <div class="content">
             <div class="title">Results</div>
             <p>Placeholder text for results section.</p>
         </div>
         <div class="graph-placeholder">Results Graph Placeholder</div>
     </section>
-    <section id="contributions" class="hidden">
+    <section id="contributions">
         <div class="image-placeholder">Team Photo Placeholder</div>
         <div class="content">
             <div class="title">Contributions</div>
             <p>Placeholder text for contributions section.</p>
         </div>
     </section>
-    <section id="references" class="hidden">
+    <section id="references">
         <div class="content">
             <div class="title">References</div>
             <p>Placeholder text for references section.</p>
@@ -151,24 +151,21 @@ import { onMount } from 'solid-js';
     </section>
 
     <script>
-        document.addEventListener("scroll", () => {
-            document.querySelectorAll("section").forEach((section) => {
-                const rect = section.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 100) {
-                    section.classList.add("visible");
-                }
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll("section");
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            }, { threshold: 0.4 });
+
+            sections.forEach((section) => {
+                observer.observe(section);
             });
         });
-        
-        // document.addEventListener("scroll", () => {
-        //     const methodsDiagram = document.getElementById("methods-diagram");
-        //     const rect = methodsDiagram.getBoundingClientRect();
-        //     if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 3) {
-        //         methodsDiagram.classList.add("expanded");
-        //     } else {
-        //         methodsDiagram.classList.remove("expanded");
-        //     }
-        // });
     </script>
 </body>
 </html>

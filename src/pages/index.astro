@@ -1,175 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import styles from '../components/styles.css';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import "../components/styles.css";
 ---
-
 <Layout>
-	<h1 id="aboutus">About Us</h1>
-	<h1 id="introduction">Introduction</h1>
-	<h1 id="background">Background</h1>
-	<h1 id="methodology">Methodology</h1>
-	<h1 id="experiments">Experiments</h1>
-	<h1 id="results">Results</h1>
-	<h1 id="conclusion">Conclusion, Limitations and Future Directions</h1>
-	<h1 id="appendix">Appendix</h1>
+  <div class="grid grid-cols-5 gap-6 p-4">
+    <div class="col-span-2 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="aboutus" class="text-3xl text-[#6096ba] font-bold ">About Us</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="col-span-3 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="introduction" class="text-3xl text-[#6096ba] font-bold ">Introduction</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="background" class="text-3xl text-[#6096ba] font-bold ">Background</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="methodology" class="text-3xl text-[#6096ba] font-bold ">Methodology</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="experiment1" class="text-3xl text-[#6096ba] font-bold ">Experiment 1</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="experiment2" class="text-3xl text-[#6096ba] font-bold ">Experiment 2</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-5 gap-6 p-4">
+    <div class="col-span-3 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="results" class="text-3xl text-[#6096ba] font-bold ">Results</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="col-span-2 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="conclusion" class="text-3xl text-[#6096ba] font-bold ">Conclusion</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="appendix" class="text-3xl text-[#6096ba] font-bold ">Appendix</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
 </Layout>
-
-<style>
-:root {
-  --primary-color: #2c3e50;
-  --secondary-color: #8e44ad;
-  --accent-color: #3498db;
-  --bg-gradient-start: #f3e7e9;
-  --bg-gradient-end: #e3eeff;
-}
-
-/* Global styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-  color: var(--primary-color);
-  min-height: 100vh;
-  line-height: 1.6;
-}
-
-/* Header container: title on left, nav dropdown on right */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.site-title {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-/* Dropdown styles */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-btn {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-btn:hover {
-  background-color: var(--accent-color);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #fff;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.dropdown-content a {
-  color: #333;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover for larger screens */
-@media (min-width: 600px) {
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-}
-
-/* Show dropdown when .show class is added (for mobile click) */
-.dropdown-content.show {
-  display: block;
-}
-
-/* Container for main content */
-.container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-}
-
-/* Section header styling */
-h1 {
-  font-size: 2.2rem;
-  margin: 2rem 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent-color);
-  text-align: center;
-}
-
-/* Paragraph text styling */
-p {
-  margin: 1rem 0;
-  font-size: 1rem;
-}
-
-/* Link styling */
-a {
-  color: var(--secondary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--accent-color);
-}
-
-/* Footer styling */
-footer {
-  background-color: #f8f8f8;
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #555;
-  border-top: 1px solid #ddd;
-  margin-top: 2rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-  .container {
-    padding: 1rem;
-  }
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .dropdown {
-    align-self: flex-end;
-    margin-top: 0.5rem;
-  }
-}
-
-
-</style>

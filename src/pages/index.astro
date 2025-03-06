@@ -1,171 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoTTA Report</title>
-    <style>
-        body { 
-            margin: 0; 
-            font-family: 'Arial', sans-serif; 
-            background-color: #121212;
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #ff8c00, #ff2d55);
-            padding: 20px;
-            text-align: center;
-            font-size: 40px;
-            font-weight: bold;
-            z-index: 1000;
-        }
-        .menu {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 8px;
-            z-index: 1001;
-        }
-        .menu a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            margin: 10px 0;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-        .menu a:hover {
-            color: #ff8c00;
-        }
-
-        section { 
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-around; 
-            text-align: left;
-            padding: 60px;
-            font-size: 24px;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
-        }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .title {
-            font-size: 50px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #ff8c00, #ff2d55);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .content {
-            width: 50%;
-        }
-
-        .graph-placeholder, .image-placeholder {
-            width: 40%;
-            height: 300px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        #motivation { background-color: #1e1e1e; }
-        #background { background-color: #292929; }
-        #methods { background-color: #343434; }
-        #results { background-color: #3f3f3f; }
-        #contributions { background-color: #494949; }
-        #references { background-color: #555555; }
-    </style>
-</head>
-<body>
-    <header>CoTTA Report - Interactive Analysis</header>
-    
-    <div class="menu">
-        <a href="#motivation">Motivation</a>
-        <a href="#background">Background</a>
-        <a href="#methods">Methods</a>
-        <a href="#results">Results</a>
-        <a href="#contributions">Contributions</a>
-        <a href="#references">References</a>
+---
+import Layout from '../layouts/Layout.astro';
+import "../components/styles.css";
+---
+<Layout>
+  <div class="grid grid-cols-5 gap-6 p-4">
+    <div class="col-span-2 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="aboutus" class="text-3xl text-[#6096ba] font-bold ">About Us</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
-    
-    <section id="motivation" class="visible">
-        <div class="content">
-            <div class="title">Motivation</div>
-            <p>Placeholder text for motivation section.</p>
-        </div>
-        <div class="image-placeholder">Image Placeholder</div>
-    </section>
-    <section id="background">
-        <div class="content">
-            <div class="title">Background</div>
-            <p>Placeholder text for background section.</p>
-        </div>
-        <div class="graph-placeholder">Graph Placeholder</div>
-    </section>
-    <section id="methods">
-        <div class="graph-placeholder">Methods Diagram Placeholder</div>
-        <div class="content">
-            <div class="title">Methods</div>
-            <p>Placeholder text for methods section.</p>
-        </div>
-    </section>
-    <section id="results">
-        <div class="content">
-            <div class="title">Results</div>
-            <p>Placeholder text for results section.</p>
-        </div>
-        <div class="graph-placeholder">Results Graph Placeholder</div>
-    </section>
-    <section id="contributions">
-        <div class="image-placeholder">Team Photo Placeholder</div>
-        <div class="content">
-            <div class="title">Contributions</div>
-            <p>Placeholder text for contributions section.</p>
-        </div>
-    </section>
-    <section id="references">
-        <div class="content">
-            <div class="title">References</div>
-            <p>Placeholder text for references section.</p>
-        </div>
-        <div class="image-placeholder">Reference Logos Placeholder</div>
-    </section>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sections = document.querySelectorAll("section");
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("visible");
-                    }
-                });
-            }, { threshold: 0.4 });
-
-            sections.forEach((section) => {
-                observer.observe(section);
-            });
-        });
-    </script>
-</body>
-</html>
+    <div class="col-span-3 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="introduction" class="text-3xl text-[#6096ba] font-bold ">Introduction</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="background" class="text-3xl text-[#6096ba] font-bold ">Background</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="methodology" class="text-3xl text-[#6096ba] font-bold ">Methodology</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="experiment1" class="text-3xl text-[#6096ba] font-bold ">Experiment 1</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="experiment2" class="text-3xl text-[#6096ba] font-bold ">Experiment 2</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-5 gap-6 p-4">
+    <div class="col-span-3 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="results" class="text-3xl text-[#6096ba] font-bold ">Results</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="col-span-2 p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="conclusion" class="text-3xl text-[#6096ba] font-bold ">Conclusion</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-6 p-4">
+    <div class="p-4 bg-[#274c77] rounded-lg shadow">
+      <h1 id="appendix" class="text-3xl text-[#6096ba] font-bold ">Appendix</h1>
+      <p class="text-[#e7ecef]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+</Layout>

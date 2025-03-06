@@ -1,60 +1,30 @@
-:root {
-    --primary-color: #2c3e50;        /* Dark blue for text */
-    --secondary-color: #8e44ad;      /* Muted purple for accents */
-    --accent-color: #3498db;         /* Soft blue for borders and links */
-    --bg-gradient-start: #f3e7e9;      /* Light, warm start of the gradient */
-    --bg-gradient-end: #e3eeff;        /* Cool, light end of the gradient */
-  }
-  
-  /* Global styles */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-    color: var(--primary-color);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-  
-  /* Container to center content and add spacing */
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  
-  /* Style for each section header */
-  h1 {
-    font-size: 2.2rem;
-    margin: 2rem 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--accent-color);
-  }
-  
-  /* Paragraph text styling */
-  p {
-    margin: 1rem 0;
-    font-size: 1rem;
-  }
-  
-  /* Link styling with a smooth transition */
-  a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  a:hover {
-    color: var(--accent-color);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 1.8rem;
-    }
-    .container {
-      padding: 1rem;
-    }
-  }
+@import "tailwindcss";
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* background: linear-gradient(to bottom, #104161, #29608a); */
+  background-color: #a3cef1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  background-color: #274c77;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.header-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background-color: #274c77;
+  color: white;
+  font-size: xx-large;
+}

@@ -270,14 +270,14 @@
                     determining its effectiveness in real-world scenarios where data distributions change unpredictably.
                 </p>
             </div>
-            <div class="image-placeholder">Image</div>
+            <div class="image-placeholder"> image placeholder</div>
         </div>
     </section>
     
     <section id="background">
         <div class="section-title">Background</div>
         <div class="section-content">
-            <div class="image-placeholder">Graph</div>
+            <div class="image-placeholder"> <img src="src/components/images/Beige Colorful Minimal Flowchart Infographic Graph (1).png" alt="flowchart"></div>
             <div class="text">
                 <p>
                     <strong>Test-time adaptation (TTA)</strong> addresses the challenge of <strong>distribution shift</strong>—a fundamental problem in machine learning where 
@@ -359,7 +359,7 @@
     
                 <h3>Linear Experiment</h3>
                 <p>
-                    To validate CoTTA’s effectiveness beyond deep networks, we tested a <strong>binary linear classifier</strong> on 
+                    To validate CoTTA's effectiveness beyond deep networks, we tested a <strong>binary linear classifier</strong> on 
                     <strong>MNIST digits 0 and 1</strong>. The model was exposed to <strong>distribution shifts</strong> via augmented MNIST images, 
                     assessing whether CoTTA could still aid adaptation in a simpler setting.
                 </p>
@@ -370,7 +370,8 @@
                     and <strong>robustness training</strong> impact adaptation performance.
                 </p>
             </div>
-            <div class="image-placeholder">Diagram</div>
+            <div class="image-placeholder"> <img src="src/components/images/Beige Colorful Minimal Flowchart Infographic Graph (1).png" alt="cotta "></div>
+            <!-- <div class="image-placeholder"> <img src="src/components/images/Blue Simple Process Flow Chart Graph (2).png" alt="bash script"></div> -->
         </div>
     </section>
 
@@ -378,14 +379,38 @@
         <div class="section-title">Results</div>
         <div class="section-content">
             <div class="text">
-                <p>Our findings demonstrate significant improvements in test-time adaptation under domain shifts.</p>
-                <ul>
-                    <li>CoTTA outperforms traditional adaptation methods.</li>
-                    <li>Accuracy improvements range from 5-15% across various benchmarks.</li>
-                    <li>Consistent performance across 15 corruption types.</li>
-                </ul>
+                <p>
+                    When <strong>model architecture is held constant</strong>, CoTTA with any form of consistency loss demonstrates 
+                    <strong>consistent prediction quality</strong>. Across models, the accuracy, precision, recall, and F1 score 
+                    improvements remain <strong>within ±0.01%</strong>, suggesting that the choice of consistency loss does not 
+                    drastically alter performance. This stability is reflected in the <strong>horizontal alignment of performance across models</strong> 
+                    with different CoTTA variations.
+                </p>
+                <p>
+                    However, when <strong>TTA loss is held constant</strong>, model size exhibits <strong>a non-directional effect</strong> 
+                    on adaptation performance. Some larger models show significant improvements, while others perform worse. 
+                    Notably, the <strong>Standard (28-layer, Wide) model</strong> achieved the <strong>highest improvement</strong>, 
+                    while the <strong>Addepalli2022Efficient_WRN_34_10 model</strong> showed the <strong>worst results</strong>. 
+                    This suggests that <strong>larger architectures do not necessarily benefit more from CoTTA</strong>, 
+                    and their complexity may introduce instability in adaptation.
+                </p>
+                <p>
+                    A key takeaway is that <strong>alternative consistency losses</strong> (PolyLoss, KL Divergence, Cosine Similarity) 
+                    serve as <strong>valid substitutions for cross-entropy loss</strong> in CoTTA. Across classification metrics—including 
+                    accuracy, precision, recall, and F1—these alternative losses yield <strong>similar test-time adaptation improvements</strong>. 
+                    This implies that changing the consistency loss <strong>does not inherently bias</strong> the model toward better or worse 
+                    false positive and false negative rates, meaning that <strong>CoTTA preserves existing model biases rather than 
+                    exacerbating or reducing them</strong>.
+                </p>
+                <p>
+                    However, <strong>model architecture remains a significant factor</strong> in CoTTA robustness. Some architectures, such as 
+                    <strong>Addepalli2022Efficient_WRN_34_10</strong>, exhibited <strong>negative performance effects across all metrics</strong>, 
+                    indicating that <strong>certain deep models may not be well-suited for CoTTA-based test-time adaptation</strong>. 
+                    Further research is needed to explore <strong>how CoTTA scales to larger architectures, including models with deep 
+                    transformer-based structures like LLMs</strong>.
+                </p>
             </div>
-            <div class="image-placeholder">Results Graph</div>
+            <div class="image-placeholder">Results Table</div>
         </div>
     </section>
     

@@ -1,473 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Investigating CoTTA: Validating Real-Time Neural Network Adaptations</title>
-  <link rel="stylesheet" href="../components/styles.css">
-  <style>
-    /* COLOR PALETTE:
-       1) #3D52A0
-       2) #7091E6
-       3) #8697C4
-       4) #ADB8DA
-       5) #EDE8F5
-    */
+---
+import Layout from '../layouts/Layout.astro';
+import "../components/styles.css";
+---
+<Layout>
 
-    /* GLOBAL STYLES */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #EDE8F5; /* Lightest shade for the page background */
-      color: #333;              /* Dark text for better contrast */
-      overflow-x: hidden;
-    }
-
-    /* HEADER */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #3D52A0; /* Darker blue for header */
-      padding: 25px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-      z-index: 1000;
-      text-align: left;
-    }
-
-    .header-title {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    /* DROPDOWN NAVIGATION */
-    .dropdown {
-      position: absolute;
-      right: 50px;
-    }
-
-    .dropbtn {
-      font-size: 17px;
-      border: none;
-      outline: none;
-      color: white;
-      background-color: #3D52A0;
-      padding: 14px 16px;
-      font-family: inherit;
-      cursor: pointer;
-      border-radius: 10px;
-    }
-
-    .dropbtn:hover, .dropbtn:focus {
-      background-color: #7091E6; /* Slightly lighter shade on hover */
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #7091E6;
-      min-width: 180px;
-      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-      z-index: 1001;
-      right: 0;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .dropdown-content a {
-      color: white;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      font-size: 16px;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #8697C4;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    /* SECTION LAYOUT */
-    .spacer {
-      height: 20px;
-    }
-
-    section {
-      max-width: 90%;
-      margin: 80px auto;
-      padding: 40px;
-      border-radius: 20px;
-      opacity: 0;
-      transform: translateY(50px) scale(0.95);
-      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-      text-align: left; /* Left align all text */
-    }
-
-    section.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    .section-title {
-      font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    /* SECTIONS BACKGROUND COLORS */
-    #motivation {
-      background-color: #7091E6; /* Medium blue */
-      color: #fff; /* White text for contrast */
-    }
-    #background {
-      background-color: #8697C4; /* Slightly darker lavender */
-      color: #fff;
-    }
-    #methods {
-      background-color: #ADB8DA; /* Light lavender */
-      color: #333;
-    }
-    #results {
-      background-color: #3D52A0; /* Dark blue */
-      color: #fff;
-    }
-    #contributions {
-      background-color: #EDE8F5;
-      color: #333;
-    }
-    #references {
-      background-color: #EDE8F5;
-      color: #333;
-    }
-
-    /* TEAM CONTRIBUTIONS */
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      width: 100%;
-    }
-
-    .team-member {
-      background-color: rgba(255, 255, 255, 0.3);
-      padding: 20px;
-      border-radius: 20px;
-      text-align: left;
-    }
-
-    .team-member img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-
-    /* FOOTER */
-    footer {
-      background-color: #3D52A0;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
-
-    /* BACKGROUND SECTION IMAGE INLINE */
-    .background-text img {
-      display: block;
-      margin: 20px auto;
-      max-width: 60%;
-      height: auto;
-    }
-
-    /* METHODS SECTION: SIDE-BY-SIDE LAYOUT */
-    #methods .section-content {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-    }
-    #methods .methods-text, 
-    #methods .methods-images {
-      flex: 1;
-    }
-    #methods .methods-images img {
-      display: block;
-      width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-    }
-
-    /* MOBILE RESPONSIVENESS */
-    @media (max-width: 768px) {
-      header {
-        font-size: 18px;
-        padding: 12px;
-      }
-      .header-title {
-        font-size: 20px;
-      }
-      .dropdown {
-        right: 15px;
-      }
-      .dropbtn {
-        padding: 10px 14px;
-        font-size: 14px;
-      }
-      section {
-        margin: 60px 15px;
-        padding: 20px;
-      }
-      #methods .section-content {
-        flex-direction: column;
-      }
-      .team-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="header-title">Investigating CoTTA: Validating Real-Time Neural Network Adaptations</div>
-    <div class="dropdown">
-      <button class="dropbtn">Menu ▼</button>
-      <div class="dropdown-content">
-        <a href="#motivation">Motivation</a>
-        <a href="#background">Background</a>
-        <a href="#methods">Methods</a>
-        <a href="#results">Results</a>
-        <a href="#contributions">Contributions</a>
-        <a href="#references">References</a>
-      </div>
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-black text-white">
+    <!-- Motivation -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="motivation">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Motivation</h2>
+        <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
+          <p>
+            Machine learning models are often deployed in <strong class="text-blue-400">dynamic environments</strong> where the data distribution shifts over time.
+            Traditional models assume that the test data follows the same distribution as the training data, but in reality, this assumption rarely holds.
+            Changes in lighting conditions, sensor noise, environmental factors, or even adversarial perturbations can significantly degrade model performance.
+          </p>
+        </div>
+        <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
+          <p>
+            <strong class="text-blue-400">Test-time adaptation (TTA)</strong> allows models to adapt to new data distributions without requiring retraining on labeled examples.
+            A key approach is <strong class="text-blue-400">Test-Time Adaptation with Pseudo-Labeling (TTAPL)</strong>, which refines predictions using <strong class="text-blue-400">self-generated labels</strong>.
+            However, standard TTAPL methods suffer from instability, error accumulation, and overfitting to noisy pseudo-labels.
+          </p>
+        </div>
+        <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
+          <p>
+            <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong> extends TTAPL by incorporating <strong class="text-blue-400">consistency loss and model ensembling techniques</strong>.
+            CoTTA applies a blend of <strong class="text-blue-400">self-training and weight perturbations</strong> to prevent catastrophic forgetting and overfitting.
+            Our goal is to evaluate <strong class="text-blue-400">how well CoTTA generalizes across different architectures and loss functions</strong>.
+          </p>
+        </div>
     </div>
-  </header>
-
-  <div class="spacer"></div>
-
-  <!-- MOTIVATION SECTION -->
-  <section id="motivation">
-    <div class="section-title">Motivation</div>
-    <p>
-      Machine learning models are often deployed in <strong>dynamic environments</strong> where the data distribution shifts over time. 
-      Traditional models assume that the test data follows the same distribution as the training data, but in reality, this assumption rarely holds. 
-      Changes in lighting conditions, sensor noise, environmental factors, or even adversarial perturbations can significantly degrade model performance. 
-      <strong>Test-time adaptation (TTA)</strong> has emerged as a solution to address this issue by allowing models to adapt to new data distributions without requiring retraining on labeled examples.
-    </p>
-    <p>
-      One key approach to TTA is <strong>Test-Time Adaptation with Pseudo-Labeling (TTAPL)</strong>, which refines predictions using <strong>self-generated labels</strong> 
-      from the model's own outputs. By leveraging these pseudo-labels, TTAPL updates the model dynamically at inference time, reducing performance degradation caused by distribution shifts. 
-      However, standard TTAPL techniques can suffer from instability, error accumulation, and overfitting to noisy pseudo-labels.
-    </p>
-    <p>
-      <strong>Continual Test-Time Adaptation (CoTTA)</strong> extends TTAPL by incorporating <strong>consistency loss and model ensembling techniques</strong> 
-      to improve adaptation stability. CoTTA applies a blend of <strong>self-training and weight perturbations</strong>, ensuring that adaptation does not lead to catastrophic forgetting 
-      or overfitting to incorrect pseudo-labels. Our goal is to evaluate <strong>how well CoTTA generalizes across different architectures and loss functions</strong>, 
-      determining its effectiveness in real-world scenarios where data distributions change unpredictably.
-    </p>
-  </section>
-
-  <!-- BACKGROUND SECTION -->
-  <section id="background">
-    <div class="section-title">Background</div>
-    <div class="section-content">
-      <div class="background-text">
+  
+    <!-- Background -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="background">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Background</h2>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          <strong>Test-time adaptation (TTA)</strong> addresses the challenge of <strong>distribution shift</strong>—a fundamental problem in machine learning where 
+          <strong class="text-blue-400">Test-time adaptation (TTA)</strong> addresses the challenge of <strong class="text-blue-400">distribution shift</strong>—a fundamental problem in machine learning where
           the statistical properties of test data deviate from those observed during training. These shifts occur in various forms, including:
         </p>
-        <p>
-          - <strong>Covariate shift:</strong> Changes in input features, such as variations in image quality or background noise in speech recognition.<br>
-          - <strong>Label shift:</strong> Differences in class distributions, where certain categories appear more frequently in deployment than in training.<br>
-          - <strong>Concept shift:</strong> Changes in the relationship between input features and labels, such as evolving language patterns in text classification.
+        <ul class="list-disc list-inside mb-4">
+          <li><strong class="text-blue-400">Covariate shift:</strong> Changes in input features, such as variations in image quality or background noise in speech recognition.</li>
+          <li><strong class="text-blue-400">Label shift:</strong> Differences in class distributions, where certain categories appear more frequently in deployment than in training.</li>
+          <li><strong class="text-blue-400">Concept shift:</strong> Changes in the relationship between input features and labels, such as evolving language patterns in text classification.</li>
+        </ul>
+      </div>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
+        <div class="w-full h-80 flex items-center justify-center rounded-lg">
+            <img src="src/images/ttapl.png" alt="TTAPL Flowchart" class="w-full h-full object-contain rounded-lg" />
+        </div>
+      </div>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
+        <p class="mt-4">
+          To handle these shifts, <strong class="text-blue-400">TTAPL</strong> enables models to adapt at inference time by generating <strong class="text-blue-400">pseudo-labels</strong>.
+          However, standard TTAPL methods often face <strong class="text-blue-400">two major challenges</strong>:
         </p>
-
-        <!-- Inline image in between paragraphs -->
-        <img src="src/images/Beige Colorful Minimal Flowchart Infographic Graph (1).png" 
-             alt="Flowchart">
-
-        <p>
-          To handle these shifts, <strong>TTAPL</strong> enables models to adapt at inference time by generating <strong>pseudo-labels</strong>, which are used to fine-tune predictions 
-          without requiring explicit ground-truth annotations. However, standard TTAPL methods often face <strong>two major challenges</strong>:
-        </p>
-        <p>
-          1. <strong>Pseudo-label drift</strong> – Incorrect pseudo-labels reinforce model biases, leading to cascading errors.<br>
-          2. <strong>Overfitting to test samples</strong> – Excessive adaptation to a small set of test data can degrade model generalization.
-        </p>
-        <p>
-          <strong>CoTTA</strong> addresses these issues by incorporating three key mechanisms:
-        </p>
-        <p>
-          - <strong>Exponential moving average (EMA)</strong> of model weights to retain past knowledge while adapting.<br>
-          - <strong>Weight perturbations</strong> that introduce stochasticity, preventing overfitting to erroneous pseudo-labels.<br>
-          - <strong>Consistency loss</strong> to ensure smooth adaptation and prevent drastic prediction shifts.
-        </p>
-        <p>
-          Unlike traditional supervised fine-tuning, which requires labeled data, CoTTA provides a practical and scalable solution for <strong>real-time model adaptation</strong>. 
-          The ability to adapt dynamically is particularly valuable in <strong>real-world applications</strong>, such as:
-        </p>
-        <p>
-          - <strong>Autonomous systems</strong> adapting to varying weather conditions.<br>
-          - <strong>Medical imaging models</strong> handling shifts across different hospital devices.<br>
-          - <strong>Robotic perception systems</strong> adjusting to unseen environments.
-        </p>
-        <p>
-          By evaluating <strong>different loss functions</strong> and <strong>neural network architectures</strong>, our research aims to explore the <strong>limits of CoTTA's adaptability</strong>. 
-          We investigate whether specific model designs—such as ResNet, WideResNet, and robustness-trained models—affect adaptation performance and whether alternative loss formulations, 
-          such as <strong>KL divergence or PolyLoss</strong>, enhance stability in <strong>continual test-time adaptation scenarios</strong>.
-        </p>
+        <ul class="list-disc list-inside mb-4">
+          <li><strong class="text-blue-400">Pseudo-label drift:</strong> Incorrect pseudo-labels reinforce model biases, leading to cascading errors.</li>
+          <li><strong class="text-blue-400">Overfitting to test samples:</strong> Excessive adaptation to a small set of test data can degrade model generalization.</li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- METHODS SECTION -->
-  <section id="methods">
-    <div class="section-title">Methods</div>
-    <div class="section-content">
-      <div class="methods-text">
-        <p>
-          <strong>CoTTA and Test-Time Adaptation</strong><br>
-          We evaluated <strong>Continual Test-Time Adaptation (CoTTA)</strong>, a method for improving model adaptation to 
-          distribution shifts without labeled test data. CoTTA leverages <strong>pseudo-labeling</strong> and 
-          <strong>consistency loss</strong> to refine predictions dynamically.
-        </p>
-
-        <p>
-          <strong>Experimental Setup</strong><br><br>
-          <strong>Model Selection</strong><br>
-          Our experiments utilized <strong>seven pre-trained models</strong> from <strong>RobustBench</strong>, each varying in complexity:
-          ResNet, WideResNet, PreActResNet, RLAT, AugMix-trained models, and a standard baseline model. 
-          These architectures differ in structural design and robustness training, influencing how well they adapt under CoTTA.
-        </p>
-
-        <p>
-          <strong>Loss Functions</strong><br>
-          To test how different loss functions influence CoTTA, we compared <strong>Cross-Entropy Loss</strong> (baseline) 
-          with <strong>PolyLoss</strong> (reduces overconfidence), <strong>Cosine Similarity</strong> (vector-based comparison), 
-          <strong>KL Divergence</strong> (measures probability shifts), and <strong>Self-Training CE</strong> (uses pseudo-labels). 
-          Each loss function modifies adaptation behavior, impacting performance.
-        </p>
-
-        <p>
-          <strong>Experiment Design</strong><br>
-          Each model was adapted <strong>four times</strong>, testing different consistency losses. 
-          We evaluated performance on <strong>CIFAR-10 → CIFAR-10C</strong>, measuring <strong>accuracy, precision, recall, and F1 score</strong>.
-        </p>
-
-        <p>
-          <strong>Linear Experiment</strong><br>
-          To validate CoTTA's effectiveness beyond deep networks, we tested a <strong>binary linear classifier</strong> on 
-          <strong>MNIST digits 0 and 1</strong>. The model was exposed to <strong>distribution shifts</strong> via augmented MNIST images, 
-          assessing whether CoTTA could still aid adaptation in a simpler setting.
-        </p>
-
-        <p>
-          <strong>Conclusion</strong><br>
-          By analyzing CoTTA across different architectures and loss functions, we assessed how <strong>model complexity</strong> 
-          and <strong>robustness training</strong> impact adaptation performance.
-        </p>
+  
+    <!-- Methods -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="methods">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Methods</h2>
+      <p class="mb-4">
+        We evaluated <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong>, a method for improving model adaptation to
+        distribution shifts without labeled test data. CoTTA leverages <strong class="text-blue-400">pseudo-labeling</strong> and
+        <strong class="text-blue-400">consistency loss</strong> to refine predictions dynamically.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 bg-gray-700 shadow-lg rounded-2xl p-4 gap-4">
+          <p><strong class="text-blue-400">Model Selection:</strong></p>
+          <ul class="list-disc list-inside">
+            <li>ResNet</li>
+            <li>WideResNet</li>
+            <li>PreActResNet</li>
+            <li>RLAT</li>
+            <li>AugMix-trained models</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-1 bg-gray-700 shadow-lg rounded-2xl p-4 gap-4">
+          <p><strong class="text-blue-400">Loss Functions Tested:</strong></p>
+          <ul class="list-disc list-inside">
+            <li>Cross-Entropy</li>
+            <li>PolyLoss</li>
+            <li>KL Divergence</li>
+            <li>Cosine Similarity</li>
+          </ul>
+        </div>
       </div>
-      <div class="methods-images">
-        <img src="src/images/Beige Colorful Minimal Flowchart Infographic Graph (1).png" alt="cotta image 1">
-        <img src="src/images/Blue Simple Process Flow Chart Graph (2).png" alt="cotta image 2">
+      <div class="flex justify-center bg-gray-700 shadow-lg rounded-2xl p-4 gap-4 mt-4">
+        <div class="w-full flex items-center justify-center">
+          <img src="src/images/cotta1.png" alt="CoTTA Image 1" class="w-full h-auto object-contain rounded-lg" />
+        </div>
+        <div class="w-full flex items-center justify-center">
+          <img src="src/images/cotta2.png" alt="CoTTA Image 2" class="w-full h-auto object-contain rounded-lg" />
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- RESULTS SECTION -->
-  <section id="results">
-    <div class="section-title">Results</div>
-    <p>
-      When <strong>model architecture is held constant</strong>, CoTTA with any form of consistency loss demonstrates 
-      <strong>consistent prediction quality</strong>. Across models, the accuracy, precision, recall, and F1 score 
-      improvements remain <strong>within ±0.01%</strong>, suggesting that the choice of consistency loss does not 
-      drastically alter performance. This stability is reflected in the <strong>horizontal alignment of performance across models</strong> 
-      with different CoTTA variations.
-    </p>
-    <p>
-      However, when <strong>TTA loss is held constant</strong>, model size exhibits <strong>a non-directional effect</strong> 
-      on adaptation performance. Some larger models show significant improvements, while others perform worse. 
-      Notably, the <strong>Standard (28-layer, Wide) model</strong> achieved the <strong>highest improvement</strong>, 
-      while the <strong>Addepalli2022Efficient_WRN_34_10 model</strong> showed the <strong>worst results</strong>. 
-      This suggests that <strong>larger architectures do not necessarily benefit more from CoTTA</strong>, 
-      and their complexity may introduce instability in adaptation.
-    </p>
-    <p>
-      A key takeaway is that <strong>alternative consistency losses</strong> (PolyLoss, KL Divergence, Cosine Similarity) 
-      serve as <strong>valid substitutions for cross-entropy loss</strong> in CoTTA. Across classification metrics—including 
-      accuracy, precision, recall, and F1—these alternative losses yield <strong>similar test-time adaptation improvements</strong>. 
-      This implies that changing the consistency loss <strong>does not inherently bias</strong> the model toward better or worse 
-      false positive and false negative rates, meaning that <strong>CoTTA preserves existing model biases rather than 
-      exacerbating or reducing them</strong>.
-    </p>
-    <p>
-      However, <strong>model architecture remains a significant factor</strong> in CoTTA robustness. Some architectures, such as 
-      <strong>Addepalli2022Efficient_WRN_34_10</strong>, exhibited <strong>negative performance effects across all metrics</strong>, 
-      indicating that <strong>certain deep models may not be well-suited for CoTTA-based test-time adaptation</strong>. 
-      Further research is needed to explore <strong>how CoTTA scales to larger architectures, including models with deep 
-      transformer-based structures like LLMs</strong>.
-    </p>
-    <p style="font-style: italic; background-color: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; max-width: 600px;">
-      Results Table Placeholder
-    </p>
-  </section>
-
-  <!-- CONTRIBUTIONS SECTION -->
-  <section id="contributions">
-    <div class="section-title">Team Contributions</div>
-    <div class="team-grid">
-      <div class="team-member">
-        <img src="#" alt="Member 1">
-        <h3>Member 1</h3>
-        <p>Developed the adaptive loss function for CoTTA.</p>
-      </div>
-      <div class="team-member">
-        <img src="#" alt="Member 2">
-        <h3>Member 2</h3>
-        <p>Implemented the evaluation framework and benchmarking.</p>
-      </div>
-      <div class="team-member">
-        <img src="#" alt="Member 3">
-        <h3>Member 3</h3>
-        <p>Designed and refined the visualization and UI components.</p>
-      </div>
-      <div class="team-member">
-        <img src="#" alt="Member 4">
-        <h3>Member 4</h3>
-        <p>Handled dataset processing and experimental setup.</p>
+  
+    <!-- Results -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
+      <p>
+        When <strong class="text-blue-400">model architecture is held constant</strong>, CoTTA with any form of consistency loss demonstrates
+        <strong class="text-blue-400">consistent prediction quality</strong>. Accuracy, precision, recall, and F1 score improvements remain
+        <strong class="text-blue-400">within ±0.01%</strong>.
+      </p>
+      <p>
+        However, <strong class="text-blue-400">larger architectures do not necessarily benefit more from CoTTA</strong>, and their complexity may introduce instability in adaptation.
+      </p>
+      <div class="p-4 bg-gray-700 rounded-lg italic text-center">[Results Table Placeholder]</div>
+    </div>
+  
+    <!-- Contributions -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="contributions">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Team Contributions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="text-center p-4 border border-gray-600 rounded-lg">
+          <h3 class="font-semibold text-blue-400">Member 1</h3>
+          <p>Developed the adaptive loss function for CoTTA.</p>
+        </div>
+        <div class="text-center p-4 border border-gray-600 rounded-lg">
+          <h3 class="font-semibold text-blue-400">Member 2</h3>
+          <p>Implemented the evaluation framework and benchmarking.</p>
+        </div>
+        <div class="text-center p-4 border border-gray-600 rounded-lg">
+          <h3 class="font-semibold text-blue-400">Member 3</h3>
+          <p>Designed and refined the visualization and UI components.</p>
+        </div>
+        <div class="text-center p-4 border border-gray-600 rounded-lg">
+          <h3 class="font-semibold text-blue-400">Member 4</h3>
+          <p>Handled dataset processing and experimental setup.</p>
+        </div>
       </div>
     </div>
-    <div id="references" style="margin-top: 40px;">
-      <h3>References</h3>
+  
+    <!-- References -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="references">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">References</h2>
       <p>blahblah</p>
     </div>
   </section>
-
-  <footer>
-    &copy; 2025 CoTTA Report. All Rights Reserved.
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const sections = document.querySelectorAll("section");
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      }, { threshold: 0.4 });
-
-      sections.forEach((section) => {
-        observer.observe(section);
-      });
-    });
-  </script>
-</body>
-</html>
+</Layout>

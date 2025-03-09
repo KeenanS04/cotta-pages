@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import "../styles/styles.css";
+import NormalizedChart from  "../components/NormalizedChart.jsx"
+import ResultsDashboard from  "../components/ResultsDashboard.jsx"
+import DynamicResultsTable from '../components/results_chart.jsx';
 ---
 <Layout>
 
@@ -112,7 +115,7 @@ import "../styles/styles.css";
       <p>
         However, <strong class="text-blue-400">larger architectures do not necessarily benefit more from CoTTA</strong>, and their complexity may introduce instability in adaptation.
       </p>
-      <div class="p-4 bg-gray-700 rounded-lg italic text-center">[Results Table Placeholder]</div>
+      <DynamicResultsTable>
     </div>
   
     <!-- Contributions -->

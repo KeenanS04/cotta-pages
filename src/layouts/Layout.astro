@@ -4,18 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Investigating CoTTA</title>
+    <link rel="stylesheet" href="../components/styles.css" />
   </head>
   <body>
-    <header>
-      <div class="header-container">
-        <h1 class="site-title">Investigating CoTTA: Validating Real-Time Neural Network Adaptations</h1>
+
+    <!-- Header -->
+    <header class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 w-full z-50">
+      <h1 class="text-xl font-bold">Investigating CoTTA: Validating Real-Time Neural Network Adaptations</h1>
+      <div class="relative">
+        <button id="menuButton" class="dropbtn bg-blue-600 px-4 py-2 rounded-lg">Menu ▼</button>
+        <div id="menuDropdown" class="dropdown-content absolute right-0 mt-2 bg-gray-800 shadow-lg rounded-lg p-2 hidden">
+          <a href="#motivation" class="block p-2 hover:bg-gray-700">Motivation</a>
+          <a href="#background" class="block p-2 hover:bg-gray-700">Background</a>
+          <a href="#methods" class="block p-2 hover:bg-gray-700">Methods</a>
+          <a href="#results" class="block p-2 hover:bg-gray-700">Results</a>
+          <a href="#contributions" class="block p-2 hover:bg-gray-700">Contributions</a>
+          <a href="#references" class="block p-2 hover:bg-gray-700">References</a>
+        </div>
       </div>
     </header>
-    <main>
+
+    <!-- Content -->
+    <main class="pt-16">
       <slot />
     </main>
-    <footer>
-      <p>&copy; <script>document.write(new Date().getFullYear().toString());</script> Keenan Serrao. All rights reserved.</p>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center p-4 mt-6">
+      &copy; 2025 CoTTA Report. All Rights Reserved.
     </footer>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Dropdown Menu Toggle
+        const menuButton = document.getElementById("menuButton");
+        const menuDropdown = document.getElementById("menuDropdown");
+
+        if (menuButton && menuDropdown) {
+          menuButton.addEventListener("click", () => {
+            menuDropdown.classList.toggle("hidden");
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener("click", (event) => {
+            if (!menuButton.contains(event.target as Node) && !menuDropdown.contains(event.target as Node)) {
+              menuDropdown.classList.add("hidden");
+            }
+          });
+
+          // Close dropdown and scroll to section with offset
+          menuDropdown.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", (event) => {
+              event.preventDefault();
+              const targetId = link?.getAttribute("href")?.substring(1);
+              const targetSection = targetId ? document.getElementById(targetId) : null;
+
+              if (targetSection) {
+                window.scrollTo({
+                  top: targetSection.offsetTop - 80, // Adjust for fixed header height
+                  behavior: "smooth"
+                });
+              }
+
+              menuDropdown.classList.add("hidden"); // Close dropdown after clicking
+            });
+          });
+        }
+      });
+    </script>
   </body>
 </html>

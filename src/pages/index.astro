@@ -13,24 +13,27 @@ import DynamicResultsTable from '../components/results_chart.jsx';
       <h2 class="text-2xl font-bold mb-4 text-blue-400">Motivation</h2>
         <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
           <p>
-            Machine learning models are often deployed in <strong class="text-blue-400">dynamic environments</strong> where the data distribution shifts over time.
-            Traditional models assume that the test data follows the same distribution as the training data, but in reality, this assumption rarely holds.
-            Changes in lighting conditions, sensor noise, environmental factors, or even adversarial perturbations can significantly degrade model performance.
+            Machine learning models are often deployed in <strong class="text-blue-400">highly dynamic environments</strong>, 
+            where the data distribution shifts unexpectedly over time. Traditional training assumes that test data follows 
+            the same distribution as training data—a fragile assumption that quickly breaks in real-world settings.
           </p>
         </div>
         <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
-          <p>
-            <strong class="text-blue-400">Test-time adaptation (TTA)</strong> allows models to adapt to new data distributions without requiring retraining on labeled examples.
-            A key approach is <strong class="text-blue-400">Test-Time Adaptation with Pseudo-Labeling (TTAPL)</strong>, which refines predictions using <strong class="text-blue-400">self-generated labels</strong>.
-            However, standard TTAPL methods suffer from instability, error accumulation, and overfitting to noisy pseudo-labels.
-          </p>
+            <p>
+                <strong class="text-blue-400">Test-Time Adaptation (TTA)</strong> tackles this challenge by adjusting models 
+                at inference time, without requiring new labels. A key approach is 
+                <strong class="text-blue-400">Test-Time Adaptation with Pseudo-Labeling (TTAPL)</strong>, which leverages 
+                <strong class="text-blue-400">unlabeled test data</strong> to refine predictions. 
+                However, standard TTAPL can suffer from instability and error accumulation if pseudo-labels are inaccurate.
+              </p>
         </div>
         <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
-          <p>
-            <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong> extends TTAPL by incorporating <strong class="text-blue-400">consistency loss and model ensembling techniques</strong>.
-            CoTTA applies a blend of <strong class="text-blue-400">self-training and weight perturbations</strong> to prevent catastrophic forgetting and overfitting.
-            Our goal is to evaluate <strong class="text-blue-400">how well CoTTA generalizes across different architectures and loss functions</strong>.
-          </p>
+            <p>
+                Our work is driven by the need to <strong class="text-blue-400">enhance TTAPL</strong> so models can better 
+                handle shifting data distributions over time. We investigate how alternative loss functions and 
+                architectural variations impact TTAPL performance, ultimately aiming to build models that remain 
+                <strong class="text-blue-400">robust and reliable</strong> across diverse deployment scenarios.
+              </p>
         </div>
     </div>
   
@@ -39,14 +42,14 @@ import DynamicResultsTable from '../components/results_chart.jsx';
       <h2 class="text-2xl font-bold mb-4 text-blue-400">Background</h2>
       <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          <strong class="text-blue-400">Test-time adaptation (TTA)</strong> addresses the challenge of <strong class="text-blue-400">distribution shift</strong>—a fundamental problem in machine learning where
-          the statistical properties of test data deviate from those observed during training. These shifts occur in various forms, including:
+            <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong> 
+            extends TTAPL by updating model parameters <em>continuously</em> with each new data point, rather than 
+            waiting for large batches of unlabeled data. CoTTA’s approach typically includes:
         </p>
         <ul class="list-disc list-inside mb-4">
-          <li><strong class="text-blue-400">Covariate shift:</strong> Changes in input features, such as variations in image quality or background noise in speech recognition.</li>
-          <li><strong class="text-blue-400">Label shift:</strong> Differences in class distributions, where certain categories appear more frequently in deployment than in training.</li>
-          <li><strong class="text-blue-400">Concept shift:</strong> Changes in the relationship between input features and labels, such as evolving language patterns in text classification.</li>
-        </ul>
+            <li><strong class="text-blue-400">Consistency loss:</strong> Encourages stable predictions across augmented views of the same input.</li>
+            <li><strong class="text-blue-400">Teacher-student updates:</strong> A “teacher” model refines the “student” model iteratively, reducing catastrophic forgetting.</li>
+          </ul>
       </div>
       <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <div class="w-full h-80 flex items-center justify-center rounded-lg">
@@ -54,10 +57,13 @@ import DynamicResultsTable from '../components/results_chart.jsx';
         </div>
       </div>
       <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
-        <p class="mt-4">
-          To handle these shifts, <strong class="text-blue-400">TTAPL</strong> enables models to adapt at inference time by generating <strong class="text-blue-400">pseudo-labels</strong>.
-          However, standard TTAPL methods often face <strong class="text-blue-400">two major challenges</strong>:
-        </p>
+        <p>
+            By blending self-training with cautious weight updates, CoTTA aims to preserve the model’s original 
+            knowledge while adapting to new conditions. In practice, this can be challenging when the distribution 
+            shift is severe or the model architecture is especially large. Our research examines how different 
+            <strong class="text-blue-400">consistency losses</strong> (e.g., KL, PolyLoss, Cosine Similarity) affect 
+            CoTTA’s ability to adapt across multiple architectures.
+          </p>
         <ul class="list-disc list-inside mb-4">
           <li><strong class="text-blue-400">Pseudo-label drift:</strong> Incorrect pseudo-labels reinforce model biases, leading to cascading errors.</li>
           <li><strong class="text-blue-400">Overfitting to test samples:</strong> Excessive adaptation to a small set of test data can degrade model generalization.</li>
@@ -67,56 +73,80 @@ import DynamicResultsTable from '../components/results_chart.jsx';
   
     <!-- Methods -->
     <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="methods">
-      <h2 class="text-2xl font-bold mb-4 text-blue-400">Methods</h2>
-      <p class="mb-4">
-        We evaluated <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong>, a method for improving model adaptation to
-        distribution shifts without labeled test data. CoTTA leverages <strong class="text-blue-400">pseudo-labeling</strong> and
-        <strong class="text-blue-400">consistency loss</strong> to refine predictions dynamically.
-      </p>
-      <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
-        <div class="grid grid-cols-1 bg-gray-700 shadow-lg rounded-2xl p-4 gap-4">
-          <p><strong class="text-blue-400">Model Selection:</strong></p>
-          <ul class="list-disc list-inside">
-            <li>ResNet</li>
-            <li>WideResNet</li>
-            <li>PreActResNet</li>
-            <li>RLAT</li>
-            <li>AugMix-trained models</li>
-          </ul>
-        </div>
-        <div class="grid grid-cols-1 bg-gray-700 shadow-lg rounded-2xl p-4 gap-4">
-          <p><strong class="text-blue-400">Loss Functions Tested:</strong></p>
-          <ul class="list-disc list-inside">
-            <li>Cross-Entropy</li>
-            <li>PolyLoss</li>
-            <li>KL Divergence</li>
-            <li>Cosine Similarity</li>
-          </ul>
+        <h2 class="text-2xl font-bold mb-4 text-blue-400">Methods</h2>
+        <p>
+          Our evaluation of Continual Test-Time Adaptation (CoTTA) was conducted using the standard CIFAR-10-to-CIFAR-10C image classification task. CIFAR-10 consists of 60,000 32×32 color images across 10 classes, while CIFAR-10C is a corrupted version of the test set with severe distortions such as noise, blur, and digital artifacts.
+        </p>
+        <p>
+          In this task, a model’s ability to correctly classify a large number of corrupted images reflects its capacity to adapt to distribution shifts. We tracked four key metrics—accuracy, precision, recall, and F1 score—to measure improvements relative to a baseline model that receives no adaptation.
+        </p>
+        <p>
+          <strong>Experiment Structure:</strong> For each combination of neural network architecture and consistency loss function, we ran the adaptation process on CIFAR-10C (Severity 5 corruptions only). This allowed us to isolate the effects of both model complexity and loss function choice on adaptation performance.
+        </p>
+        <p>
+          <strong>Model Choice:</strong> Our experiments used models selected from RobustBench, ensuring a diverse range of architectures. We evaluated variants of ResNet (PR), WideResNet (WR), and PreActResNet (R), including models that have been trained with robust strategies such as RLAT and AugMix. Models are labeled M1 through M7 in order of increasing depth and complexity, which helped us assess the influence of architecture on test-time adaptation.
+        </p>
+        <p>
+          <strong>Loss Functions:</strong> In addition to a baseline with no adaptation and Normal TTA, we evaluated TENT (which minimizes entropy) and several CoTTA variants using different consistency losses:
+        </p>
+        <ul class="list-disc list-inside mb-4">
+          <li>Cross-Entropy – serves as our baseline since CoTTA was originally designed with CE loss.</li>
+          <li>Cosine Similarity – measures the angular difference between prediction vectors, potentially leading to smoother updates.</li>
+          <li>PolyLoss – an extension of cross-entropy with a polynomial term (ε = 0.1) to reduce overconfidence.</li>
+          <li>KL Divergence – compares the full probability distributions between teacher and student, supporting gradual adaptation.</li>
+          <li>Self-Training Cross-Entropy – uses the student model’s own predictions as pseudo-labels, though it may reinforce initial errors.</li>
+        </ul>
+        <p>
+          Our aim was to determine whether alternative loss functions can provide performance comparable to or better than the cross-entropy baseline, and to understand how different architectures respond under these various adaptation schemes.
+        </p>
+        <div class="flex justify-center bg-gray-700 shadow-lg rounded-2xl p-4 gap-4 mt-4">
+          <div class="w-full flex items-center justify-center">
+            <img src="/cotta-pages/images/cotta1.png" alt="CoTTA Image 1" class="w-full h-auto object-contain rounded-lg" />
+          </div>
+          <div class="w-full flex items-center justify-center">
+            <img src="/cotta-pages/images/cotta2.png" alt="CoTTA Image 2" class="w-full h-auto object-contain rounded-lg" />
+          </div>
         </div>
       </div>
-      <div class="flex justify-center bg-gray-700 shadow-lg rounded-2xl p-4 gap-4 mt-4">
-        <div class="w-full flex items-center justify-center">
-          <img src="/cotta-pages/images/cotta1.png" alt="CoTTA Image 1" class="w-full h-auto object-contain rounded-lg" />
-        </div>
-        <div class="w-full flex items-center justify-center">
-          <img src="/cotta-pages/images/cotta2.png" alt="CoTTA Image 2" class="w-full h-auto object-contain rounded-lg" />
+      
+      <!-- Results -->
+      <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
+        <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
+        <p>
+          Our experimental results indicate that when model architecture is held constant, CoTTA variants using Cross-Entropy, KL Divergence, and PolyLoss deliver similar improvements across the key metrics—typically within a ±1% range.
+        </p>
+        <p>
+          This consistency suggests that the choice of consistency loss can be flexibly substituted without a drastic impact on overall prediction quality, provided the model architecture remains unchanged.
+        </p>
+        <p>
+          In contrast, when we fix the loss function, model architecture emerges as a critical factor. For example, models trained with robust methods like RLAT or AugMix often show significant improvements under CoTTA, whereas certain high-capacity models exhibit instability or even reduced performance relative to the source model.
+        </p>
+        <p>
+          Among the loss functions tested, CoTTA with KL Divergence and PolyLoss consistently matches or exceeds the performance of the cross-entropy baseline, while the self-training variant frequently underperforms. This disparity underscores the challenges of relying solely on self-generated labels in a continual adaptation framework.
+        </p>
+        <p>
+          Overall, our findings emphasize that no single TTA strategy is optimal across all scenarios. Instead, the effectiveness of test-time adaptation is governed by the interplay between the chosen consistency loss and the underlying model architecture. For a more detailed view of the numerical improvements, please refer to the interactive table below.
+        </p>
+        <div class="mt-4">
+          <DynamicResultsTable />
         </div>
       </div>
-    </div>
-  
     <!-- Results -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
-      <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
-      <p>
-        When <strong class="text-blue-400">model architecture is held constant</strong>, CoTTA with any form of consistency loss demonstrates
-        <strong class="text-blue-400">consistent prediction quality</strong>. Accuracy, precision, recall, and F1 score improvements remain
-        <strong class="text-blue-400">within ±0.01%</strong>.
-      </p>
-      <p>
-        However, <strong class="text-blue-400">larger architectures do not necessarily benefit more from CoTTA</strong>, and their complexity may introduce instability in adaptation.
-      </p>
-      <DynamicResultsTable>
-    </div>
+    <!-- <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
+        <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
+        <p>
+          Our experiments reveal that when model architecture is held constant, the improvement provided by CoTTA variants—whether using Cross-Entropy, KL Divergence, or PolyLoss—is remarkably consistent (improvements are within ±1% across key metrics). 
+        </p>
+        <p>
+          However, when the TTA loss is held equal, model type plays a significant role in adaptation performance. In some cases, larger architectures do not benefit more from CoTTA, and certain models (e.g., those trained with RLAT) may even experience negative gains.
+        </p>
+        <p>
+          Overall, while alternative consistency losses (KL, PolyLoss, Cosine Similarity) can achieve similar performance to Cross-Entropy, no single method dominates across all architectures. This underscores the importance of tailoring TTA methods to the specific model and application.
+        </p>
+        <div class="mt-4">
+          <DynamicResultsTable />
+        </div>
+      </div> -->
   
     <!-- Contributions -->
     <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="contributions">

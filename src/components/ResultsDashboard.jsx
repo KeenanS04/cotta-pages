@@ -35,7 +35,7 @@ export default function ResultsDashboard() {
 
   // Fetch JSON data from the public folder when component mounts.
   useEffect(() => {
-    fetch('public/data.json')
+    fetch('/cotta-pages//data.json')
       .then(response => response.json())
       .then(jsonData => {
         setData(jsonData);

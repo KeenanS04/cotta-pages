@@ -25,7 +25,7 @@ export default function NormalizedCards() {
 
   // Fetch the JSON data when the component mounts.
   useEffect(() => {
-    fetch('public/data.json')
+    fetch('/cotta-pages//data.json')
       .then(response => response.json())
       .then(json => setData(json))
       .catch(err => console.error("Error fetching data:", err));

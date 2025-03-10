@@ -1,15 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import "../styles/styles.css";
-import NormalizedChart from  "../components/NormalizedChart.jsx"
-import ResultsDashboard from  "../components/ResultsDashboard.jsx"
-import DynamicResultsTable from '../components/results_chart.jsx';
+import ResultsChart from '../components/ResultsChart.jsx';
 ---
-<Layout>
 
-  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-black text-white">
+<Layout>
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 bg-black text-white">
     <!-- Motivation -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="motivation">
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-1" id="motivation">
       <h2 class="text-2xl font-bold mb-4 text-blue-400">Motivation</h2>
         <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2 flex-1">
           <p>
@@ -38,13 +36,13 @@ import DynamicResultsTable from '../components/results_chart.jsx';
     </div>
   
     <!-- Background -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="background">
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-2" id="background">
       <h2 class="text-2xl font-bold mb-4 text-blue-400">Background</h2>
       <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
             <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong> 
             extends TTAPL by updating model parameters <em>continuously</em> with each new data point, rather than 
-            waiting for large batches of unlabeled data. CoTTA’s approach typically includes:
+            waiting for large batches of unlabeled data. CoTTA's approach typically includes:
         </p>
         <ul class="list-disc list-inside mb-4">
             <li><strong class="text-blue-400">Consistency loss:</strong> Encourages stable predictions across augmented views of the same input.</li>
@@ -58,11 +56,11 @@ import DynamicResultsTable from '../components/results_chart.jsx';
       </div>
       <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-            By blending self-training with cautious weight updates, CoTTA aims to preserve the model’s original 
+            By blending self-training with cautious weight updates, CoTTA aims to preserve the model's original 
             knowledge while adapting to new conditions. In practice, this can be challenging when the distribution 
             shift is severe or the model architecture is especially large. Our research examines how different 
             <strong class="text-blue-400">consistency losses</strong> (e.g., KL, PolyLoss, Cosine Similarity) affect 
-            CoTTA’s ability to adapt across multiple architectures.
+            CoTTA's ability to adapt across multiple architectures.
           </p>
         <ul class="list-disc list-inside mb-4">
           <li><strong class="text-blue-400">Pseudo-label drift:</strong> Incorrect pseudo-labels reinforce model biases, leading to cascading errors.</li>
@@ -72,48 +70,53 @@ import DynamicResultsTable from '../components/results_chart.jsx';
     </div>
   
     <!-- Methods -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="methods">
-        <h2 class="text-2xl font-bold mb-4 text-blue-400">Methods</h2>
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-3" id="methods">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Methods</h2>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          Our evaluation of Continual Test-Time Adaptation (CoTTA) was conducted using the standard CIFAR-10-to-CIFAR-10C image classification task. CIFAR-10 consists of 60,000 32×32 color images across 10 classes, while CIFAR-10C is a corrupted version of the test set with severe distortions such as noise, blur, and digital artifacts.
+          Our evaluation of <strong class="text-blue-400">Continual Test-Time Adaptation (CoTTA)</strong> was conducted using the standard CIFAR-10-to-CIFAR-10C image classification task. CIFAR-10 consists of 60,000 32x32 color images across 10 classes, while CIFAR-10C is a corrupted version of the test set with severe distortions such as noise, blur, and digital artifacts.
         </p>
         <p>
-          In this task, a model’s ability to correctly classify a large number of corrupted images reflects its capacity to adapt to distribution shifts. We tracked four key metrics—accuracy, precision, recall, and F1 score—to measure improvements relative to a baseline model that receives no adaptation.
+          In this task, a model's ability to correctly classify a large number of corrupted images reflects its capacity to adapt to distribution shifts. We tracked four key metrics—accuracy, precision, recall, and F1 score—to measure improvements relative to a baseline model that receives no adaptation.
         </p>
         <p>
-          <strong>Experiment Structure:</strong> For each combination of neural network architecture and consistency loss function, we ran the adaptation process on CIFAR-10C (Severity 5 corruptions only). This allowed us to isolate the effects of both model complexity and loss function choice on adaptation performance.
+          <strong class="text-blue-400">Experiment Structure:</strong> For each combination of neural network architecture and consistency loss function, we ran the adaptation process on CIFAR-10C (Severity 5 corruptions only). This allowed us to isolate the effects of both model complexity and loss function choice on adaptation performance.
         </p>
         <p>
-          <strong>Model Choice:</strong> Our experiments used models selected from RobustBench, ensuring a diverse range of architectures. We evaluated variants of ResNet (PR), WideResNet (WR), and PreActResNet (R), including models that have been trained with robust strategies such as RLAT and AugMix. Models are labeled M1 through M7 in order of increasing depth and complexity, which helped us assess the influence of architecture on test-time adaptation.
+          <strong class="text-blue-400">Model Choice:</strong> Our experiments used models selected from RobustBench, ensuring a diverse range of architectures. We evaluated variants of ResNet (PR), WideResNet (WR), and PreActResNet (R), including models that have been trained with robust strategies such as RLAT and AugMix. Models are labeled M1 through M7 in order of increasing depth and complexity, which helped us assess the influence of architecture on test-time adaptation.
         </p>
+      </div>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          <strong>Loss Functions:</strong> In addition to a baseline with no adaptation and Normal TTA, we evaluated TENT (which minimizes entropy) and several CoTTA variants using different consistency losses:
+          <strong class="text-blue-400">Loss Functions:</strong> In addition to a baseline with no adaptation and Normal TTA, we evaluated TENT (which minimizes entropy) and several CoTTA variants using different consistency losses:
         </p>
         <ul class="list-disc list-inside mb-4">
-          <li>Cross-Entropy – serves as our baseline since CoTTA was originally designed with CE loss.</li>
-          <li>Cosine Similarity – measures the angular difference between prediction vectors, potentially leading to smoother updates.</li>
-          <li>PolyLoss – an extension of cross-entropy with a polynomial term (ε = 0.1) to reduce overconfidence.</li>
-          <li>KL Divergence – compares the full probability distributions between teacher and student, supporting gradual adaptation.</li>
-          <li>Self-Training Cross-Entropy – uses the student model’s own predictions as pseudo-labels, though it may reinforce initial errors.</li>
+          <li><strong class="text-blue-400">Cross-Entropy:</strong> Serves as our baseline since CoTTA was originally designed with CE loss.</li>
+          <li><strong class="text-blue-400">Cosine Similarity:</strong> Measures the angular difference between prediction vectors, potentially leading to smoother updates.</li>
+          <li><strong class="text-blue-400">PolyLoss:</strong> An extension of cross-entropy with a polynomial term (ε = 0.1) to reduce overconfidence.</li>
+          <li><strong class="text-blue-400">KL Divergence:</strong> Compares the full probability distributions between teacher and student, supporting gradual adaptation.</li>
+          <li><strong class="text-blue-400">Self-Training Cross-Entropy:</strong> Uses the student model's own predictions as pseudo-labels, though it may reinforce initial errors.</li>
         </ul>
         <p>
           Our aim was to determine whether alternative loss functions can provide performance comparable to or better than the cross-entropy baseline, and to understand how different architectures respond under these various adaptation schemes.
         </p>
-        <div class="flex justify-center bg-gray-700 shadow-lg rounded-2xl p-4 gap-4 mt-4">
-          <div class="w-full flex items-center justify-center">
-            <img src="/cotta-pages/images/cotta1.png" alt="CoTTA Image 1" class="w-full h-auto object-contain rounded-lg" />
-          </div>
-          <div class="w-full flex items-center justify-center">
-            <img src="/cotta-pages/images/cotta2.png" alt="CoTTA Image 2" class="w-full h-auto object-contain rounded-lg" />
-          </div>
+      </div>
+      <div class="flex justify-center bg-gray-700 shadow-lg rounded-2xl p-4 gap-4 mt-4">
+        <div class="w-full flex items-center justify-center">
+        <img src="/cotta-pages/images/cotta1.png" alt="CoTTA Image 1" class="w-full h-auto object-contain rounded-lg" />
+        </div>
+        <div class="w-full flex items-center justify-center">
+        <img src="/cotta-pages/images/cotta2.png" alt="CoTTA Image 2" class="w-full h-auto object-contain rounded-lg" />
         </div>
       </div>
+    </div>
       
-      <!-- Results -->
-      <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
-        <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
+    <!-- Results -->
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-3" id="results">
+      <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
+      <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          Our experimental results indicate that when model architecture is held constant, CoTTA variants using Cross-Entropy, KL Divergence, and PolyLoss deliver similar improvements across the key metrics—typically within a ±1% range.
+          Our experimental results indicate that when model architecture is held constant, CoTTA variants using <strong class="text-blue-400">Cross-Entropy, KL Divergence, and PolyLoss</strong> deliver similar improvements across the key metrics—typically within a ±1% range.
         </p>
         <p>
           This consistency suggests that the choice of consistency loss can be flexibly substituted without a drastic impact on overall prediction quality, provided the model architecture remains unchanged.
@@ -121,60 +124,57 @@ import DynamicResultsTable from '../components/results_chart.jsx';
         <p>
           In contrast, when we fix the loss function, model architecture emerges as a critical factor. For example, models trained with robust methods like RLAT or AugMix often show significant improvements under CoTTA, whereas certain high-capacity models exhibit instability or even reduced performance relative to the source model.
         </p>
+        </div>
+        <div class="bg-gray-700 shadow-lg rounded-2xl p-4 m-2">
         <p>
-          Among the loss functions tested, CoTTA with KL Divergence and PolyLoss consistently matches or exceeds the performance of the cross-entropy baseline, while the self-training variant frequently underperforms. This disparity underscores the challenges of relying solely on self-generated labels in a continual adaptation framework.
+          Among the loss functions tested, CoTTA with <strong class="text-blue-400">KL Divergence and PolyLoss</strong> consistently matches or exceeds the performance of the cross-entropy baseline, while the self-training variant frequently underperforms. This disparity underscores the challenges of relying solely on self-generated labels in a continual adaptation framework.
         </p>
         <p>
           Overall, our findings emphasize that no single TTA strategy is optimal across all scenarios. Instead, the effectiveness of test-time adaptation is governed by the interplay between the chosen consistency loss and the underlying model architecture. For a more detailed view of the numerical improvements, please refer to the interactive table below.
         </p>
-        <div class="mt-4">
-          <DynamicResultsTable />
-        </div>
       </div>
-    <!-- Results -->
-    <!-- <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="results">
-        <h2 class="text-2xl font-bold mb-4 text-blue-400">Results</h2>
-        <p>
-          Our experiments reveal that when model architecture is held constant, the improvement provided by CoTTA variants—whether using Cross-Entropy, KL Divergence, or PolyLoss—is remarkably consistent (improvements are within ±1% across key metrics). 
-        </p>
-        <p>
-          However, when the TTA loss is held equal, model type plays a significant role in adaptation performance. In some cases, larger architectures do not benefit more from CoTTA, and certain models (e.g., those trained with RLAT) may even experience negative gains.
-        </p>
-        <p>
-          Overall, while alternative consistency losses (KL, PolyLoss, Cosine Similarity) can achieve similar performance to Cross-Entropy, no single method dominates across all architectures. This underscores the importance of tailoring TTA methods to the specific model and application.
-        </p>
-        <div class="mt-4">
-          <DynamicResultsTable />
-        </div>
-      </div> -->
+      <div class="mt-4">
+        <ResultsChart client:load/>
+      </div>
+    </div>
   
     <!-- Contributions -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6 col-span-2" id="contributions">
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-2" id="contributions">
       <h2 class="text-2xl font-bold mb-4 text-blue-400">Team Contributions</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="text-center p-4 border border-gray-600 rounded-lg">
-          <h3 class="font-semibold text-blue-400">Member 1</h3>
-          <p>Developed the adaptive loss function for CoTTA.</p>
+          <h3 class="font-semibold text-blue-400">Ansh</h3>
+          <p>Implemented two models, analyzed result metrics, contributed to website.</p>
         </div>
         <div class="text-center p-4 border border-gray-600 rounded-lg">
-          <h3 class="font-semibold text-blue-400">Member 2</h3>
-          <p>Implemented the evaluation framework and benchmarking.</p>
+          <h3 class="font-semibold text-blue-400">Ifunanya</h3>
+          <p>Implemented two models, contributed to poster and paper.</p>
         </div>
         <div class="text-center p-4 border border-gray-600 rounded-lg">
-          <h3 class="font-semibold text-blue-400">Member 3</h3>
-          <p>Designed and refined the visualization and UI components.</p>
+          <h3 class="font-semibold text-blue-400">Keenan</h3>
+          <p>Restructured original CoTTA repository to run on different architectures, contributed to website.</p>
         </div>
         <div class="text-center p-4 border border-gray-600 rounded-lg">
-          <h3 class="font-semibold text-blue-400">Member 4</h3>
-          <p>Handled dataset processing and experimental setup.</p>
+          <h3 class="font-semibold text-blue-400">Nick</h3>
+          <p>Implemented two models, contributed to poster and paper.</p>
         </div>
       </div>
     </div>
   
     <!-- References -->
-    <div class="bg-gray-800 shadow-lg rounded-2xl p-6" id="references">
+    <div class="bg-gray-800 shadow-lg rounded-2xl p-4 md:p-6 col-span-1 md:col-span-2 lg:col-span-1" id="references">
       <h2 class="text-2xl font-bold mb-4 text-blue-400">References</h2>
-      <p>blahblah</p>
+      <ul class="list-disc list-inside">
+        <li>
+          <strong>Goyal, Sun, Raghunathan, Kolter.</strong> "Test-Time Adaptation via Conjugate Pseudo-labels." Neural Information Processing Systems (NeurIPS), 2022. <a href="https://arxiv.org/pdf/2207.09640" class="text-blue-400">https://arxiv.org/pdf/2207.09640</a>
+        </li>
+        <li>
+          <strong>Wang, Fink, Gool, Dai.</strong> "Continual Test-Time Domain Adaptation." 2022. <a href="https://doi.org/10.48550/arXiv.2203.13591" class="text-blue-400">https://doi.org/10.48550/arXiv.2203.13591</a>
+        </li>
+        <li>
+          <strong>Hendrycks, Dietterich.</strong> "Benchmarking Neural Network Robustness to Common Corruptions and Perturbations." 2019. <a href="https://arxiv.org/pdf/1903.12261" class="text-blue-400">https://arxiv.org/pdf/1903.12261</a>
+        </li>
+      </ul>
     </div>
   </section>
 </Layout>

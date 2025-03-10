@@ -14,28 +14,23 @@ import "../styles/styles.css";
     <!-- Header -->
     <header class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 w-full z-50">
       <h1 class="text-xl font-bold">Investigating CoTTA: Validating Real-Time Neural Network Adaptations</h1>
-      <li><a href="src/pages/interactions.astro" class="text-blue-400 hover:underline">Data Interactions</a></li>
       <div class="relative">
-        <button id="menuButton" class="dropbtn bg-blue-600 px-4 py-2 rounded-lg">Menu ▼</button>
+        <button id="menuButton" class="dropbtn bg-blue-400 px-4 py-2 rounded-lg">Menu ▼</button>
         <div id="menuDropdown" class="dropdown-content absolute right-0 mt-2 bg-gray-800 shadow-lg rounded-lg p-2 hidden">
-          <a href="#motivation" class="block p-2 hover:bg-gray-700">Motivation</a>
-          <a href="#background" class="block p-2 hover:bg-gray-700">Background</a>
-          <a href="#methods" class="block p-2 hover:bg-gray-700">Methods</a>
-          <a href="#results" class="block p-2 hover:bg-gray-700">Results</a>
-          <a href="#contributions" class="block p-2 hover:bg-gray-700">Contributions</a>
-          <a href="#references" class="block p-2 hover:bg-gray-700">References</a>
+          <a href="/cotta-pages/" class="block p-2 hover:bg-gray-700">Home</a>
+          <a href="/cotta-pages/interactions" class="block p-2 hover:bg-gray-700">Data Interactions</a>
         </div>
       </div>
     </header>
 
     <!-- Content -->
-    <main class="pt-16">
+    <main class="pt-16 bg-black">
       <slot />
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white text-center p-4 mt-6">
-      &copy; 2025 CoTTA Report. All Rights Reserved.
+    <footer class="bg-gray-900 text-white text-center p-4">
+      DSC 180AB 2024-2025
     </footer>
 
     <!-- JavaScript -->
@@ -46,7 +41,8 @@ import "../styles/styles.css";
         const menuDropdown = document.getElementById("menuDropdown");
 
         if (menuButton && menuDropdown) {
-          menuButton.addEventListener("click", () => {
+          menuButton.addEventListener("click", (event) => {
+            event.stopPropagation();
             menuDropdown.classList.toggle("hidden");
           });
 
@@ -55,24 +51,6 @@ import "../styles/styles.css";
             if (!menuButton.contains(event.target as Node) && !menuDropdown.contains(event.target as Node)) {
               menuDropdown.classList.add("hidden");
             }
-          });
-
-          // Close dropdown and scroll to section with offset
-          menuDropdown.querySelectorAll("a").forEach((link) => {
-            link.addEventListener("click", (event) => {
-              event.preventDefault();
-              const targetId = link?.getAttribute("href")?.substring(1);
-              const targetSection = targetId ? document.getElementById(targetId) : null;
-
-              if (targetSection) {
-                window.scrollTo({
-                  top: targetSection.offsetTop - 80, // Adjust for fixed header height
-                  behavior: "smooth"
-                });
-              }
-
-              menuDropdown.classList.add("hidden"); // Close dropdown after clicking
-            });
           });
         }
       });

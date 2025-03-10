@@ -1,5 +1,3 @@
-// src/components/ResultsDashboard.jsx
-
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -12,28 +10,20 @@ import {
   Legend
 } from 'chart.js';
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function ResultsDashboard() {
-  // Raw JSON data from data.json
   const [data, setData] = useState(null);
-  // Grouped data structure: { archetype: { lossFunction: [fileObj, ...] } }
   const [groupedData, setGroupedData] = useState({});
-  // Noise keys (all keys except the model descriptor key)
   const [noiseKeys, setNoiseKeys] = useState([]);
-  // Selected metric to compare
   const [selectedMetric, setSelectedMetric] = useState("accuracy");
 
-  // For group 1 selection (archetype and loss function)
-  const [selectedGroup1Archetype, setSelectedGroup1Archetype] = useState("");
+  const [selectedGroup1Architecture, setSelectedGroup1Architecture] = useState("");
   const [selectedGroup1Loss, setSelectedGroup1Loss] = useState("");
 
-  // For group 2 selection (archetype and loss function)
-  const [selectedGroup2Archetype, setSelectedGroup2Archetype] = useState("");
+  const [selectedGroup2Architecture, setSelectedGroup2Architecture] = useState("");
   const [selectedGroup2Loss, setSelectedGroup2Loss] = useState("");
 
-  // Fetch JSON data from the public folder when component mounts.
   useEffect(() => {
     fetch('/cotta-pages//data.json')
       .then(response => response.json())
@@ -43,77 +33,74 @@ export default function ResultsDashboard() {
       .catch(err => console.error("Error fetching JSON:", err));
   }, []);
 
-  // When raw data is loaded, group it by archetype and loss function.
   useEffect(() => {
     if (!data) return;
-    const fileNames = Object.keys(data);
+  
     const group = {};
-    fileNames.forEach(fileName => {
-      const fileObj = data[fileName];
-      // The first key is assumed to be the archetype key.
-      const archetypeKey = Object.keys(fileObj)[0]; // e.g. "cotta", "cotta_selftrain", etc.
-      // The value associated with this key is the loss function identifier.
-      const lossFunction = fileObj[archetypeKey];
-      if (!group[archetypeKey]) {
-        group[archetypeKey] = {};
+  
+    Object.entries(data).forEach(([fileName, fileObj]) => {
+      // Extract architecture key dynamically (it is NOT a noise corruption type)
+      const architectureKey = Object.keys(fileObj).find(key => key.startsWith("cotta") || key.startsWith("norm") || key.startsWith("source"));
+      
+      if (!architectureKey) return; // Skip if no valid architecture key found
+  
+      const lossFunction = fileObj[architectureKey]; // Get the corresponding loss function name
+  
+      if (!group[architectureKey]) {
+        group[architectureKey] = {};
       }
-      if (!group[archetypeKey][lossFunction]) {
-        group[archetypeKey][lossFunction] = [];
+      if (!group[architectureKey][lossFunction]) {
+        group[architectureKey][lossFunction] = [];
       }
-      group[archetypeKey][lossFunction].push(fileObj);
+  
+      group[architectureKey][lossFunction].push(fileObj);
     });
+  
     setGroupedData(group);
-
-    // Determine available archetypes (keys of group)
-    const archetypes = Object.keys(group);
-    if (archetypes.length > 0) {
-      // Set default selections if not already set.
-      if (!selectedGroup1Archetype) {
-        setSelectedGroup1Archetype(archetypes[0]);
+  
+    // Populate the architecture dropdown with valid options
+    const architectures = Object.keys(group);
+    if (architectures.length > 0) {
+      if (!selectedGroup1Architecture) {
+        setSelectedGroup1Architecture(architectures[0]);
       }
-      if (archetypes.length > 1 && !selectedGroup2Archetype) {
-        setSelectedGroup2Archetype(archetypes[1]);
+      if (architectures.length > 1 && !selectedGroup2Architecture) {
+        setSelectedGroup2Architecture(architectures[1]);
       }
     }
-
-    // Also, set noise keys from the first file of the first archetype group.
-    if (archetypes.length > 0) {
-      const firstArchetype = archetypes[0];
-      // Get first loss function group under this archetype.
-      const lossFns = Object.keys(group[firstArchetype]);
+  
+    // Extract noise corruption keys from the first architecture + loss function pair
+    if (architectures.length > 0) {
+      const firstArchitecture = architectures[0];
+      const lossFns = Object.keys(group[firstArchitecture]);
       if (lossFns.length > 0) {
-        // The first key is the model descriptor; remove it from the keys when listing noise types.
-        const firstFile = group[firstArchetype][lossFns[0]][0];
-        const modelDescriptorKey = Object.keys(firstFile)[0];
-        const noises = Object.keys(firstFile).filter(key => key !== modelDescriptorKey);
+        const firstFile = group[firstArchitecture][lossFns[0]][0];
+        const noises = Object.keys(firstFile).filter(key => !["cotta", "cotta_selftrain", "cotta_poly", "norm", "source", "cotta_kl", "cotta_cosine"].includes(key));
         setNoiseKeys(noises);
       }
     }
   }, [data]);
 
-  // When an archetype selection changes, update the corresponding loss function selection.
-  // We assume that each archetype group has at least one loss function.
   useEffect(() => {
-    if (selectedGroup1Archetype && groupedData[selectedGroup1Archetype]) {
-      const lossFns = Object.keys(groupedData[selectedGroup1Archetype]);
+    if (selectedGroup1Architecture && groupedData[selectedGroup1Architecture]) {
+      const lossFns = Object.keys(groupedData[selectedGroup1Architecture]);
       if (lossFns.length > 0) {
         setSelectedGroup1Loss(lossFns[0]);
       }
     }
-  }, [selectedGroup1Archetype, groupedData]);
-
+  }, [selectedGroup1Architecture, groupedData]);
+  
   useEffect(() => {
-    if (selectedGroup2Archetype && groupedData[selectedGroup2Archetype]) {
-      const lossFns = Object.keys(groupedData[selectedGroup2Archetype]);
+    if (selectedGroup2Architecture && groupedData[selectedGroup2Architecture]) {
+      const lossFns = Object.keys(groupedData[selectedGroup2Architecture]);
       if (lossFns.length > 0) {
         setSelectedGroup2Loss(lossFns[0]);
       }
     }
-  }, [selectedGroup2Archetype, groupedData]);
+  }, [selectedGroup2Architecture, groupedData]);
 
-  // Helper: Compute average value of the selected metric for a given group (archetype + loss).
-  function getAverageMetricForGroup(archetype, loss, metric) {
-    const files = groupedData[archetype] && groupedData[archetype][loss] ? groupedData[archetype][loss] : [];
+  function getAverageMetricForGroup(architecture, loss, metric) {
+    const files = groupedData[architecture] && groupedData[architecture][loss] ? groupedData[architecture][loss] : [];
     const averages = {};
     noiseKeys.forEach(noise => {
       let sum = 0;
@@ -129,31 +116,41 @@ export default function ResultsDashboard() {
     return averages;
   }
 
-  // If data or noiseKeys haven't loaded, show loading.
   if (!data || noiseKeys.length === 0) {
     return <p>Loading data...</p>;
   }
 
-  // Available archetypes for dropdowns.
-  const archetypeOptions = Object.keys(groupedData);
+  const architectureOptions = Object.keys(groupedData);
 
-  // Compute average metrics for each selected group.
-  const averagesGroup1 = getAverageMetricForGroup(selectedGroup1Archetype, selectedGroup1Loss, selectedMetric);
-  const averagesGroup2 = getAverageMetricForGroup(selectedGroup2Archetype, selectedGroup2Loss, selectedMetric);
+  const averagesGroup1 = getAverageMetricForGroup(selectedGroup1Architecture, selectedGroup1Loss, selectedMetric);
+  const averagesGroup2 = getAverageMetricForGroup(selectedGroup2Architecture, selectedGroup2Loss, selectedMetric);
 
-  // Prepare chart data: one label per noise type.
+  const architectureMapping = {
+    "Kireev2021Effectiveness_Gauss50percent": "M1",
+    "Kireev2021Effectiveness_RLAT": "M2",
+    "Kireev2021Effectiveness_RLATAugMix": "M3",
+    "Standard": "M4",
+    "Hendrycks2020AugMix_ResNeXt": "M5",
+    "Addepalli2022Efficient_WRN_34_10": "M6",
+    "Hendrycks2020AugMix_WRN": "M7"
+  };
+
   const barChartData = {
     labels: noiseKeys,
     datasets: [
       {
-        label: `${selectedGroup1Archetype} - ${selectedGroup1Loss} (${selectedMetric})`,
+        label: `${selectedGroup1Architecture} - ${selectedGroup1Loss} (${selectedMetric})`,
         data: noiseKeys.map(noise => averagesGroup1[noise]),
-        backgroundColor: 'rgba(75, 192, 192, 0.4)'
+        backgroundColor: 'rgba(75, 192, 192, 0.4)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
       },
       {
-        label: `${selectedGroup2Archetype} - ${selectedGroup2Loss} (${selectedMetric})`,
+        label: `${selectedGroup2Architecture} - ${selectedGroup2Loss} (${selectedMetric})`,
         data: noiseKeys.map(noise => averagesGroup2[noise]),
-        backgroundColor: 'rgba(255, 99, 132, 0.4)'
+        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
       }
     ]
   };
@@ -161,117 +158,121 @@ export default function ResultsDashboard() {
   const chartOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: `Comparison of ${selectedMetric}` }
+      legend: { position: 'top', labels: { color: 'white' } },
+      title: { display: true, text: `Comparison of ${selectedMetric}`, color: 'white' }
+    },
+    scales: {
+      x: { ticks: { color: 'white' }, title: { display: true, text: 'Noise Type', color: 'white' } },
+      y: { ticks: { color: 'white' }, title: { display: true, text: selectedMetric, color: 'white' } }
     }
   };
 
   return (
-    <div>
-      <h2>Results Dashboard</h2>
+    <div className="my-6 p-6 bg-gray-900 rounded-xl shadow-lg text-white">
+      <h2 className="text-2xl font-bold mb-4">Results Dashboard</h2>
       
-      {/* Controls Section */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <div>
           <strong>Select Metric:</strong>
           {["accuracy", "precision", "recall", "f1"].map(metric => (
             <button
               key={metric}
               onClick={() => setSelectedMetric(metric)}
-              style={{
-                margin: '0 0.5rem',
-                backgroundColor: metric === selectedMetric ? '#ddd' : ''
-              }}
+              className={`ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400 ${
+                metric === selectedMetric ? "bg-blue-500" : ""
+              }`}
             >
               {metric}
             </button>
           ))}
         </div>
 
-        <div style={{ marginTop: '0.5rem' }}>
+        <div className="mt-4">
           <strong>Group 1:</strong>
-          <label style={{ margin: '0 0.5rem' }}>
-            Archetype:
-            <select
-              value={selectedGroup1Archetype}
-              onChange={e => setSelectedGroup1Archetype(e.target.value)}
-              style={{ marginLeft: '0.3rem' }}
-            >
-              {archetypeOptions.map(a => (
-                <option key={a} value={a}>{a}</option>
-              ))}
-            </select>
+          <label className="ml-2">
+          Loss Function:
+          <select
+            value={selectedGroup1Architecture}
+            onChange={e => setSelectedGroup1Architecture(e.target.value)}
+            className="ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400"
+          >
+            {architectureOptions.map(a => (
+              <option key={a} value={a}>{architectureMapping[a] || a}</option>
+            ))}
+          </select>
           </label>
-          <label style={{ margin: '0 0.5rem' }}>
-            Loss Function:
+          <label className="ml-2">
+            Architecture:
             <select
               value={selectedGroup1Loss}
               onChange={e => setSelectedGroup1Loss(e.target.value)}
-              style={{ marginLeft: '0.3rem' }}
+              className="ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400"
             >
-              {groupedData[selectedGroup1Archetype] && Object.keys(groupedData[selectedGroup1Archetype]).map(loss => (
-                <option key={loss} value={loss}>{loss}</option>
-              ))}
+              {groupedData[selectedGroup1Architecture] &&
+                Object.keys(groupedData[selectedGroup1Architecture]).map(loss => (
+                  <option key={loss} value={loss}>{architectureMapping[loss] || loss}</option>
+                ))}
             </select>
           </label>
         </div>
 
-        <div style={{ marginTop: '0.5rem' }}>
+        <div className="mt-4">
           <strong>Group 2:</strong>
-          <label style={{ margin: '0 0.5rem' }}>
-            Archetype:
+          <label className="ml-2">
+            Loss Function:
             <select
-              value={selectedGroup2Archetype}
-              onChange={e => setSelectedGroup2Archetype(e.target.value)}
-              style={{ marginLeft: '0.3rem' }}
+              value={selectedGroup2Architecture}
+              onChange={e => setSelectedGroup2Architecture(e.target.value)}
+              className="ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400"
             >
-              {archetypeOptions.map(a => (
-                <option key={a} value={a}>{a}</option>
+              {architectureOptions.map(a => (
+                <option key={a} value={a}>{architectureMapping[a] || a}</option>
               ))}
             </select>
           </label>
-          <label style={{ margin: '0 0.5rem' }}>
-            Loss Function:
+          <label className="ml-2">
+            Architecture:
             <select
               value={selectedGroup2Loss}
               onChange={e => setSelectedGroup2Loss(e.target.value)}
-              style={{ marginLeft: '0.3rem' }}
+              className="ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400"
             >
-              {groupedData[selectedGroup2Archetype] && Object.keys(groupedData[selectedGroup2Archetype]).map(loss => (
-                <option key={loss} value={loss}>{loss}</option>
-              ))}
+              {groupedData[selectedGroup2Architecture] &&
+                Object.keys(groupedData[selectedGroup2Architecture]).map(loss => (
+                  <option key={loss} value={loss}>{architectureMapping[loss] || loss}</option>
+                ))}
             </select>
           </label>
         </div>
       </div>
 
-      {/* Chart Section */}
       <div>
-        <h3>Comparison Bar Chart</h3>
+        <h3 className="text-xl font-semibold mb-2">Comparison Bar Chart</h3>
         <Bar data={barChartData} options={chartOptions} />
       </div>
       
-      {/* Table Section */}
-      <div style={{ marginTop: '2rem' }}>
-        <h3>Detailed Data Table</h3>
-        <table border="1" cellPadding="5" style={{ borderCollapse: 'collapse', width: '100%' }}>
-          <thead>
-            <tr>
-              <th>Noise Type</th>
-              <th>{selectedGroup1Archetype} - {selectedGroup1Loss} {selectedMetric}</th>
-              <th>{selectedGroup2Archetype} - {selectedGroup2Loss} {selectedMetric}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {noiseKeys.map((noise, idx) => (
-              <tr key={idx}>
-                <td>{noise}</td>
-                <td>{averagesGroup1[noise].toFixed(3)}</td>
-                <td>{averagesGroup2[noise].toFixed(3)}</td>
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold mb-2">Detailed Data Table</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse rounded-lg">
+            <thead>
+              <tr className="bg-gray-800 text-blue-400">
+                <th className="border border-gray-700 px-4 py-2">Noise Type</th>
+                <th className="border border-gray-700 px-4 py-2">{architectureMapping[selectedGroup1Architecture]} - {selectedGroup1Loss} {selectedMetric}</th>
+                <th className="border border-gray-700 px-4 py-2">{architectureMapping[selectedGroup2Architecture]} - {selectedGroup2Loss} {selectedMetric}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {noiseKeys.map((noise, idx) => (
+                <tr key={idx} className="odd:bg-gray-700 even:bg-gray-800 hover:bg-gray-600 transition-all">
+                  <td className="border border-gray-700 px-4 py-2">{noise}</td>
+                  <td className="border border-gray-700 px-4 py-2">{averagesGroup1[noise].toFixed(3)}</td>
+                  <td className="border border-gray-700 px-4 py-2">{averagesGroup2[noise].toFixed(3)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

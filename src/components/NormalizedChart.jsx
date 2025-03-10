@@ -87,23 +87,19 @@ export default function NormalizedCards() {
 
   // The main view: display a control for metric selection and a card for each adaptation method.
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Normalized Results Dashboard</h2>
+    <div className="my-6 p-6 bg-gray-900 rounded-xl shadow-lg text-white">
+      <h2 className="text-2xl font-bold mb-4">Normalized Results Dashboard</h2>
       
       {/* Metric selection buttons */}
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="mb-4">
         <strong>Select Metric: </strong>
         {["accuracy", "precision", "recall", "f1"].map(metric => (
           <button
             key={metric}
             onClick={() => setSelectedMetric(metric)}
-            style={{
-              margin: "0 0.5rem",
-              padding: "0.3rem 0.6rem",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              backgroundColor: metric === selectedMetric ? "#ddd" : ""
-            }}
+            className={`ml-2 px-4 py-2 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-400 ${
+              metric === selectedMetric ? "bg-blue-500" : ""
+            }`}
           >
             {metric}
           </button>
@@ -111,36 +107,26 @@ export default function NormalizedCards() {
       </div>
 
       {/* Cards Layout */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="flex flex-wrap gap-4">
         {Object.keys(groupedAverages).map(method => (
           <div 
             key={method}
             onClick={() => setSelectedMethod(method)}
-            style={{
-              border: "1px solid #ccc",
-              padding: "1rem",
-              borderRadius: "6px",
-              flex: "1 0 300px",
-              boxShadow: "2px 2px 6px rgba(0,0,0,0.1)",
-              cursor: "pointer",
-              transition: "transform 0.2s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.02)"}
-            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            className="border border-gray-700 p-4 rounded-lg flex-1 min-w-[300px] shadow-md cursor-pointer transition-transform transform hover:scale-105"
           >
-            <h3 style={{ marginTop: 0 }}>{method}</h3>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <h3 className="text-xl font-semibold mb-2">{method}</h3>
+            <table className="w-full border-collapse rounded-lg">
               <thead>
-                <tr>
-                  <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "0.25rem" }}>Noise Type</th>
-                  <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "0.25rem" }}>{selectedMetric}</th>
+                <tr className="bg-gray-800 text-blue-400">
+                  <th className="border border-gray-700 px-4 py-2">Noise Type</th>
+                  <th className="border border-gray-700 px-4 py-2">{selectedMetric}</th>
                 </tr>
               </thead>
               <tbody>
                 {noiseTypes.map(noise => (
-                  <tr key={noise}>
-                    <td style={{ padding: "0.25rem" }}>{noise}</td>
-                    <td style={{ padding: "0.25rem" }}>
+                  <tr key={noise} className="odd:bg-gray-700 even:bg-gray-800 hover:bg-gray-600 transition-all">
+                    <td className="border border-gray-700 px-4 py-2">{noise}</td>
+                    <td className="border border-gray-700 px-4 py-2">
                       {groupedAverages[method][noise] !== undefined ? groupedAverages[method][noise].toFixed(3) : "N/A"}
                     </td>
                   </tr>
@@ -179,7 +165,7 @@ function Modal({ children, onClose }) {
       zIndex: 1000
     }}>
       <div style={{
-        backgroundColor: "white",
+        backgroundColor: "darkgray",
         padding: "1rem",
         borderRadius: "8px",
         maxWidth: "90%",
